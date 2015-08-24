@@ -1,5 +1,5 @@
 //! Bismillahi-Rahamanirahim.
-///
+/// http://www.spoj.com/problems/SUBLEX/
 
 /** ========================================**
  ** @Author: A Asif Khan Chowdhury
@@ -118,7 +118,17 @@ void dfs(state *now){     // Lexicographically traversing all substrings.
 
 void query(state *now, int k){
     if(now!=root and k==1)return;
-
+    if(now!=root) k--;
+    for(int i=0;i<26;i++){
+        if(now->ch[i]){
+            if(k<=now->ch[i]->cnt){
+                ans[anslen++]=i+'a';
+                query(now->ch[i],k);
+                return;
+            }
+            else k-=now->ch[i]->cnt;
+        }
+    }
 }
 
 int main() {
