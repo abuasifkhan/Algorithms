@@ -34,10 +34,10 @@ struct SuffixArray {
         }
     }
 
-    vector<int> GetSuffixArray() {
+    vector<int> GetSuffixArray() {  // sorted by Initial suffix array position.
         return P.back();
     }
-    vector<int> GetMappedSuffixArray(){
+    vector<int> GetMappedSuffixArray(){ // Sorted by lexicographical order
         for(int i=0;i<L;i++)
             mp[P[P.size()-1][i]]=i;
         return mp;
@@ -66,8 +66,8 @@ int main() {
     //     cel is the 2'nd suffix
     //      el is the 3'rd suffix
     //       l is the 4'th suffix
-    SuffixArray suffix("bobocel");
-    vector<int> v = suffix.GetMappedSuffixArray();
+    SuffixArray suffix("daabbccaa");
+    vector<int> v = suffix.GetSuffixArray();
 
     // Expected output: 0 5 1 6 2 3 4
     //                  2
