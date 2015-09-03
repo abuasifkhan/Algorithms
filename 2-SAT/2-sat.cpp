@@ -1,9 +1,18 @@
-//!
-///
-
 /**============= Approach =================**
 @Author: A Asif Khan Chowdhury
-@Category:
+
+The algorithm for the solution of 2-SAT can be applied in all tasks
+ where there is a set of variables, each of which can take two
+  possible values, and there is a connection between these values
+
+Conditional statements like
+"(a || c) && (a ||! d) && (b ||! d) && (b ||! e) && (c || d)" can be
+solved by 2-SAT.
+
+1- First DFS is for making order, in which SCC is going to be build.
+2- Second DFS is for making topsort or SCC.
+3- If i and ~i is same colored, 2-SAT is not possible.
+
 /**========================================**/
 
 
@@ -41,7 +50,7 @@ int color[mx];
 vector<int>order;
 int m, n;
 
-void dfs(int u){
+void dfs(int u){        // Making order to be used to top sort
     visited[u]=true;
     for(int i=0; i<G[u].size(); i++){
         int v = G[u][i];
@@ -50,7 +59,7 @@ void dfs(int u){
     order.pb(u);
 }
 
-void topo(int u, int col){
+void topo(int u, int col){  // top sort or SCC
     color[u]=col;
     for(int i=0;i<GT[u].size(); i++){
         int v = GT[u][i];
@@ -61,8 +70,8 @@ void topo(int u, int col){
 
 bool isTwoSat(){
     for(int i=2; i<=2*n; i+=2)
-        if(color[i]==color[i^1])
-            return false;
+        if(color[i]==color[i^1])    // if i and ~i is same colored
+            return false;           // 2-sat is not possible
     return true;
 }
 
