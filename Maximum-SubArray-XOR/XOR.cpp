@@ -87,24 +87,21 @@ void update(int n){     // XOR update
 
 int query(int n){   // XOR query
     trie * tmp = root;
-    int ret=0;
     for(int i=30;i>=0;i--){
         if(Check(n,i)){
             if(tmp->lson){
                 tmp=tmp->lson;
-                ret|=(1<<i);
             }
             else tmp=tmp->rson;
         }
         else{
             if(tmp->rson){
                 tmp=tmp->rson;
-                ret|=(1<<i);
             }
             else tmp=tmp->lson;
         }
     }
-    return ret;
+    return tmp->val;
 }
 int arr[mx];
 
@@ -120,17 +117,18 @@ int main() {
     FOR(C, 1, test) {
         int n;read(n);
         root=new trie();
-        int x=0;
-        int ans=0;
         arr[0]=0;
         for(int i=1;i<=n;i++){
             read(arr[i]);
-            arr[i]^=arr[i-1];
         }
-
+        int x=0;
+        int ans=0;
         for(int i=0;i<n;i++){
-            update(arr[i]);
-            ans = max(ans, query(arr[i+1]));
+            x^=arr[i];
+            update(x);
+            int y=query(x);
+            y^=x;
+            ans = max(ans, y);
         }
         cout<<ans<<endl;
         delete(root);
