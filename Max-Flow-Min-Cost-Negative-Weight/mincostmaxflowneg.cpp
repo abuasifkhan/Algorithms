@@ -1,55 +1,76 @@
-int source, sink, nNode, nEdge;
-int fin[mx],pre[mx],dist[mx];
-int cap[100*mx],cost[100*mx],nxt[100*mx],to[100*mx],from[100*mx];
 
-void init (int _src, int _snk, int nodes){
-    fill(fin,fin+mx,-1);
-    nNode=nodes, nEdge=0;
-    source=_src, sink=_snk;
+const int EEE=1000100;
+int vis[mx];
+int dist[mx];
+int pre[mx];
+struct Edge{
+    int u,v,c,cost,next;
+}edge[EEE];
+
+int head[mx],cnt;
+
+void init(){
+    cnt=0;
+    memset(head,-1,sizeof(head));
+}
+void addEdge(int u, int v, int c, int cost){
+    edge[cnt].u=u;edge[cnt].v=v;edge[cnt].cost=cost;
+    edge[cnt].c=c;edge[cnt].next=head[u];head[u]=cnt++;
+
+    edge[cnt].u=v;edge[cnt].v=u;edge[cnt].cost=-cost;
+    edge[cnt].c=0;edge[cnt].next=head[v];head[v]=cnt++;
 }
 
-void addEdge(int u, int v, int _cap, int _cost){
-    from[nEdge]=u, to[nEdge]=v,cap[nEdge]=_cap,cost[nEdge]=_cost;
-    nxt[nEdge]=fin[u],fin[u]=nEdge++;
-    from[nEdge]=v, to[nEdge]=u, cap[nEdge]=0, cost[nEdge]=-(_cost);
-    nxt[nEdge]=fin[v],fin[v]=nEdge++;
-}
-
-bool bellman(){
-    int iter,u,v,i;
-    bool flag=true;
-    fill(dist,dist+mx,inf);
-    fill(pre,pre+mx,-1);
-    dist[source]=0;
-    for(iter=1;iter<nNode and flag; iter++){
-        flag=false;
-        for(u=0;u<nNode;u++){
-            for(i=fin[u];i>=0;i=nxt[i]){
-                v=to[i];
-                if(cap[i] and dist[v]>dist[u]+cost[i]){
-                    dist[v]=dist[u]+cost[i];
+bool bellman(int begin, int end){
+    int u,v;
+    queue<int>q;
+    for(int i=0;i<=end+2;i++){
+        pre[i]=-1;vis[i]=0;dist[i]=inf;
+    }
+    vis[begin]=1;
+    dist[begin]=0;
+    q.push(begin);
+    while(!q.empty()){
+        u=q.front();
+        q.pop();
+        vis[u]=0;
+        for(int i=head[u];i!=-1;i=edge[i].next){
+            if(edge[i].c>0){
+                v=edge[i].v;
+                if(dist[v]>dist[u]+edge[i].cost){
+                    dist[v]=dist[u]+edge[i].cost;
                     pre[v]=i;
-                    flag=true;
+                    if(!vis[v]){
+                        vis[v]=true;
+                        q.push(v);
+                    }
                 }
             }
         }
     }
-    return (dist[sink]<inf);
+    return dist[end]!=inf;
 }
 
-int minCostMaxFlow(int &fcost){
-    int netflow,bot,u;
-    netflow=fcost=0;
-    while(bellman()){
-        bot=inf;
-        for(u=pre[sink]; u>=0; u=pre[from[u]])
-            bot=min(bot,cap[u]);
-        for(u=pre[sink];u>=0;u=pre[from[u]]){
-            cap[u]-=bot;
-            cap[u^1]+=bot;
-            fcost+=bot*cost[u];
+int minCostMaxFlow(int begin, int end, int &resflow){
+    int ans=0,flow;
+    int flow_sum=0;
+    while(bellman(begin,end)){
+        flow=inf;
+        for(int i=pre[end];i!=-1;i=pre[edge[i].u])
+            if(edge[i].c<flow)
+                flow=edge[i].c;
+        for(int i=pre[end];i!=-1;i=pre[edge[i].u]){
+            edge[i].c-=flow;
+            edge[i^1].c+=flow;
         }
-        netflow+=bot;
+        ans+=dist[end];
+        flow_sum+=flow;
     }
-    return netflow;
+    resflow=flow_sum;
+    return ans;
 }
+
+
+
+
+
