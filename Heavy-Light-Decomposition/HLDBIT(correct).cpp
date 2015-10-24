@@ -1,36 +1,6 @@
-//! Bismillahi-Rahamanirahim.
-/** ========================================**
- ** @Author: A Asif Khan Chowdhury
-/** ========================================**/
-
-
-/**................ Headers ................**/
 #include <bits/stdc++.h>
 
 using namespace std;
-
-/**................ Macros ................**/
-#define Set(N, j) (N|(1<<j))
-#define reset(N, j) (N&~(1<<j))
-#define Check(N, j) (bool)(N&(1<<j))
-#define toggle(N, j) (N^(1<<j))
-#define turnOff(N, j) (N & ~(1<<j))
-#define CLEAR(A, x) ( memset(A,x,sizeof(A)) )
-#define pii pair <int, int>
-#define pb push_back
-#define open freopen("D:/a.txt", "r", stdin);
-#define write freopen("D:/b.txt","w", stdout);
-#define inf (1<<28)
-#define ll long long
-#define mod 1000000007
-#define debug cout<<"ok"<<endl;
-#define gc getchar
-#define ls(n) (n<<1)
-#define rs(n) ls(n)|1
-#define MID(a,b) ((a+b)>>1)
-#define fs first
-#define sc second
-#define mx 100010
 
 //Fast Reader
 template<class T>inline bool read(T &x) {
@@ -215,7 +185,63 @@ int main() {
     #endif // LOCAL
     return 0;
 }
+/*
+// Copyright (C) 2012, LamPhanViet
+/* Test Cases:
+3
+4
+10 20 30 40
+0 1
+1 2
+1 3
+6
+0 2 3
+1 1 100
+0 2 3
+0 0 3
+0 3 0
+0 0 2
 
+7
+0 1 2 3 4 5 6
+0 6
+0 1
+1 5
+1 2
+2 3
+3 4
+4
+0 0 4
+0 4 6
+0 5 6
+0 3 4
 
-
-
+11
+0 1 2 3 4 5 6 7 8 9 10
+0 1
+1 3
+1 2
+2 4
+2 5
+5 6
+6 7
+6 8
+6 9
+6 10
+1
+0 4 6
+// Answer:
+// Case 1:
+// 90
+// 170
+// 150
+// 150
+// 140
+// Case 2:
+// 10
+// 16
+// 12
+// 7
+// Case 3:
+// 17
+*/
