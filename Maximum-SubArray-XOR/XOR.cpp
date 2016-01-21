@@ -1,158 +1,104 @@
-//! Bismillahi-Rahamanirahim.
-/** ========================================**
- ** @Author: A Asif Khan Chowdhury
-/** ========================================**/
-
-
-/**................ Headers ................**/
-#include <bits/stdc++.h>
-
+// C++ program for a Trie based O(n) solution to find max
+// subarray XOR
+#include<bits/stdc++.h>
 using namespace std;
-
-/**................ Macros ................**/
-#define Set(N, j) (N|(1<<j))
-#define reset(N, j) (N&~(1<<j))
-#define Check(N, j) (bool)(N&(1<<j))
-#define toggle(N, j) (N^(1<<j))
-#define turnOff(N, j) (N & ~(1<<j))
-#define CLEAR(A, x) ( memset(A,x,sizeof(A)) )
-#define pi 3.141592653589793
-#define pii pair <int, int>
-#define pb push_back
-#define pf printf
-#define S(x) scanf("%d", &x)
-#define SL(x) scanf("%ld", &x)
-#define out(C) printf("Case %d: ", C);
-#define FOR(i, x, y) for(int i=x; i<=y; i++)
-#define open freopen("D:/a.txt", "r", stdin);
-#define write freopen("D:/b.txt","w", stdout);
-#define MAX (1+(1<<5))
-#define inf 0x7fffffff
-#define ll long long
-#define mod 1000000007
-#define gc getchar
-#define debug_array(a,n) for(int i=0;i<n;i++) cout<<a[i].in<<" "; cout<<endl;
-#define ls(n) (n<<1)
-#define rs(n) ls(n)|1
-#define MID(a,b) ((a+b)>>1)
-#define mx 400010
-
-//Fast Reader
-template<class T>inline bool read(T &x) {
-    int c=getchar();
-    int sgn=1;
-    while(~c&&c<'0'||c>'9') {
-        if(c=='-')sgn=-1;
-        c=getchar();
-    }
-    for(x=0; ~c&&'0'<=c&&c<='9'; c=getchar())x=x*10+c-'0';
-    x*=sgn;
-    return ~c;
+ 
+// Assumed int size
+#define INT_SIZE 32
+ 
+// A Trie Node
+struct TrieNode
+{
+    int value;  // Only used in leaf nodes
+    TrieNode *arr[2];
+};
+ 
+// Utility function tp create a Trie node
+TrieNode *newNode()
+{
+    TrieNode *temp = new TrieNode;
+    temp->value = 0;
+    temp->arr[0] = temp->arr[1] = NULL;
+    return temp;
 }
-int X[]= {-1, -1, -1, 0, 1, 1, 1, 0};   //x 8 direction
-int Y[]= {-1, 0, +1, 1, 1, 0, -1, -1};  //y 8 direction
-// int X[]= {-1, 0, 1, 0};   //x 4 direction
-// int Y[]= { 0, 1, 0, -1};  //y 4 direction
-
-struct trie{
-    int val;
-    trie * lson, *rson;
-    trie(){
-        lson=NULL, rson=NULL;
+ 
+// Inserts pre_xor to trie with given root
+void insert(TrieNode *root, int pre_xor)
+{
+    TrieNode *temp = root;
+ 
+    // Start from the msb, insert all bits of
+    // pre_xor into Trie
+    for (int i=INT_SIZE-1; i>=0; i--)
+    {
+        // Find current bit in given prefix
+        bool val = pre_xor & (1<<i);
+ 
+        // Create a new node if needed
+        if (temp->arr[val] == NULL)
+            temp->arr[val] = newNode();
+ 
+        temp = temp->arr[val];
     }
-    ~trie(){
-        if(lson)
-            delete(lson);
-        if(rson)
-            delete(rson);
-    }
-}*root;
-
-void update(int n){     // XOR update
-    trie * tmp=root;
-    for(int i=30;i>=0;i--){
-        if(Check(n,i)){
-            if(!tmp->rson)
-                tmp->rson=new trie();
-            tmp=tmp->rson;
-        }
-        else{
-            if(!tmp->lson)
-                tmp->lson=new trie();
-            tmp = tmp->lson;
-        }
-    }
-    tmp->val=n;
+ 
+    // Store value at leaf node
+    temp->value = pre_xor;
 }
-
-int query(int n){   // XOR query
-    trie * tmp = root;
-    for(int i=30;i>=0;i--){
-        if(Check(n,i)){
-            if(tmp->lson){
-                tmp=tmp->lson;
-            }
-            else tmp=tmp->rson;
-        }
-        else{
-            if(tmp->rson){
-                tmp=tmp->rson;
-            }
-            else tmp=tmp->lson;
-        }
+ 
+// Finds the maximum XOR ending with last number in
+// prefix XOR 'pre_xor' and returns the XOR of this maximum
+// with pre_xor which is maximum XOR ending with last element
+// of pre_xor.
+int query(TrieNode *root, int pre_xor)
+{
+    TrieNode *temp = root;
+    for (int i=INT_SIZE-1; i>=0; i--)
+    {
+        // Find current bit in given prefix
+        bool val = pre_xor & (1<<i);
+ 
+        // Traverse Trie, first look for a
+        // prefix that has opposite bit
+        if (temp->arr[1-val]!=NULL)
+            temp = temp->arr[1-val];
+ 
+        // If there is no prefix with opposite
+        // bit, then look for same bit.
+        else if (temp->arr[val] != NULL)
+            temp = temp->arr[val];
     }
-    return tmp->val;
+    return pre_xor^(temp->value);
 }
-int arr[mx];
-
-int main() {
-	#ifdef LOCAL
-    open
-    double st=clock(),en;
-    #endif // LOCAL
-    // Constrain
-    // LDC
-    int test;
-    read(test);
-    FOR(C, 1, test) {
-        int n;read(n);
-        root=new trie();
-        arr[0]=0;
-        for(int i=1;i<=n;i++){
-            read(arr[i]);
-        }
-        int x=0;
-        int ans=0;
-        for(int i=0;i<n;i++){
-            x^=arr[i];
-            update(x);
-            int y=query(x);
-            y^=x;
-            ans = max(ans, y);
-        }
-        cout<<ans<<endl;
-        delete(root);
+ 
+// Returns maximum XOR value of a subarray in arr[0..n-1]
+int maxSubarrayXOR(int arr[], int n)
+{
+    // Create a Trie and insert 0 into it
+    TrieNode *root = newNode();
+    insert(root, 0);
+ 
+    // Initialize answer and xor of current prefix
+    int result = INT_MIN, pre_xor =0;
+ 
+    // Traverse all input array element
+    for (int i=0; i<n; i++)
+    {
+        // update current prefix xor and insert it into Trie
+        pre_xor = pre_xor^arr[i];
+        insert(root, pre_xor);
+ 
+        // Query for current prefix xor in Trie and update
+        // result if required
+        result = max(result, query(root, pre_xor));
     }
-
-    #ifdef LOCAL
-    en=clock();
-    cout<<"Time: ";
-    cerr<<(double)(en-st)/CLOCKS_PER_SEC<<endl;
-    #endif // LOCAL
+    return result;
+}
+ 
+// Driver program to test above functions
+int main()
+{
+    int arr[] = {8, 1, 2, 12};
+    int n = sizeof(arr)/sizeof(arr[0]);
+    cout << "Max subarray XOR is " << maxSubarrayXOR(arr, n);
     return 0;
 }
-/*
-Input:
-2
-5
-3  7  7  7  0
-5
-3  8  2  6  4
-Output:
-7
-15
-*/
-
-
-
-
