@@ -1,84 +1,107 @@
-#include <iostream>
-#include <vector>
-#include <map>
-#include <cstring>
-#include <list>
-#include <queue>
-#include <cmath>
-#include <cstdio>
-#include <algorithm>
-#include <stack>
-#include <sstream>
-#include <bitset>
-#include <set>
-#define pb push_back
+//! Bismillahi-Rahamanirahim.
+/** ========================================**
+ ** @Author: A Asif Khan Chowdhury
+/** ========================================**/
+
+#include <bits/stdc++.h>
+
 using namespace std;
 
-//LCA using sparse table
-//Complexity: O(NlgN,lgN)
-#define mx 100002
-int L[mx]; // level
-int Parse[mx][22]; // Parse table
-int P[mx]; //Parent
-vector<int>g[mx];
-void dfs(int from,int u,int dep) {
-    P[u]=from;
-    L[u]=dep;
-    for(int i=0; i<(int)g[u].size(); i++) {
-        int v=g[u][i];
-        if(v==from) continue;
-        dfs(u,v,dep+1);
+#define Set(N, j) (N|(1<<j))
+#define reset(N, j) (N&~(1<<j))
+#define Check(N, j) (bool)(N&(1<<j))
+#define toggle(N, j) (N^(1<<j))
+#define turnOff(N, j) (N & ~(1<<j))
+#define CLEAR(A, x) ( memset(A,x,sizeof(A)) )
+#define pii pair <int, int>
+#define pb push_back
+#define open freopen("D:/a.txt", "r", stdin);
+#define write freopen("D:/b.txt","w", stdout);
+#define inf (1ll<<28)
+#define ll long long
+#define mod 1000000007
+#define gc getchar
+#define ls(n) (n<<1)
+#define rs(n) ls(n)|1
+#define MID(a,b) ((a+b)>>1)
+#define fs first
+#define sc second
+#define mx 100010
+
+template<class T>inline bool read(T &x) {
+    int c=getchar();
+    int sgn=1;
+    while(~c&&c<'0'||c>'9') {
+        if(c=='-')sgn=-1;
+        c=getchar();
     }
+    for(x=0; ~c&&'0'<=c&&c<='9'; c=getchar())x=x*10+c-'0';
+    x*=sgn;
+    return ~c;
 }
+int X[]= {-1, -1, -1, 0, 1, 1, 1, 0};   //x 8 direction
+int Y[]= {-1, 0, +1, 1, 1, 0, -1, -1};  //y 8 direction
+// int X[]= {-1, 0, 1, 0};   //x 4 direction
+// int Y[]= { 0, 1, 0, -1};  //y 4 direction
 
-int lca_query(int N, int p, int q) {
-    int tmp, log, i;
+const int step = 20;
+int parent[mx][step+5], start[mx], finish[mx], Tm;
+vector<int>adj[mx];
 
-    if (L[p] < L[q])
-        tmp = p, p = q, q = tmp;
+void dfs(int u, int par){
+    start[u] = Tm++;
 
-    log=1;
-    while((1<<(log+1))<=L[p]) log++;
-    // while(1) {
-    //     int next=log+1;
-    //     if((1<<next)>L[p])break;
-    //     log++;
-    // }
-    for (i = log; i >= 0; i--)
-        if (L[p] - (1 << i) >= L[q]){
-            p = Parse[p][i];
-        }
-    if (p == q){
-        return p;
+    parent[u][0]=par;
+    for(int i=1;i<=step;i++){
+        parent[u][i] = parent[parent[u][i-1]][i-1];
     }
-    for (i = log; i >= 0; i--)
-        if (Parse[p][i] != -1 && Parse[p][i] != Parse[q][i]){
-            p = Parse[p][i], q = Parse[q][i];
-        }
-    return P[p];
+
+    for(int i=0;i<adj[u].size();i++){
+        int v=adj[u][i];
+        if(v==par)continue;
+        dfs(v,u);
+    }
+
+    finish[u]=Tm++;
 }
 
-void lca_init(int N) {
-    memset (Parse,-1,sizeof(Parse)); // Initially parse[] = -1
-    int i, j;
-    for (i = 0; i < N; i++)
-        Parse[i][0] = P[i];
-
-    for (j = 1; 1 << j < N; j++)
-        for (i = 0; i < N; i++)
-            if (Parse[i][j - 1] != -1){
-                Parse[i][j] = Parse[Parse[i][j - 1]][j - 1];
-            }
+bool isAncestor(int u, int v){ // is u ancestor of v?
+    if(start[u]<=start[v] and finish[u]>=finish[v])
+        return true;
+    return false;
 }
 
-int main(void) {
-    g[0].pb(1);
-    g[1].pb(2);
-    g[1].pb(3);
-//    g[2].pb(4);
-    dfs(0, 0, 0);
-    lca_init(4);
-    printf( "%d\n", lca_query(4,2, 3) );
+int lca_query(int u, int v){
+    int w = -1;
+
+    if(isAncestor(u,v)) w=u;
+    if(isAncestor(v,u)) w=v;
+
+    if(w==-1){
+        w=u;
+        for(int i=step;i>=0;i--)
+            if(!isAncestor(parent[w][i],v))
+                w = parent[w][i];
+        w=parent[w][0];
+    }
+    return w;
+}
+
+void init(int n){
+    Tm=0;
+    for(int i=0;i<=n;i++)adj[i].clear();
+}
+
+int main() {
+    #ifdef LOCAL
+    freopen("D:/a.txt", "r", stdin);
+    #endif // LOCAL
+
+    dfs(1,1);   // It should be given! No (1,0) or (1,-1)
+
     return 0;
 }
+
+
+
 
