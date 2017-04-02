@@ -1,3 +1,5 @@
+// Tutorial: http://codeforces.com/blog/entry/45223
+
 for(int i = 0; i<(1<<N); ++i)
 F[i] = A[i];
 for(int i = 0;i < N; ++i) for(int mask = 0; mask < (1<<N); ++mask){
