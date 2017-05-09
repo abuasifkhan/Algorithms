@@ -68,12 +68,33 @@ void add(int val){
 int l=0,r=0;
 
 void query(int L, int R){
-    if(l<L)for(int i=l;i<L;i++)del(arr[i]);
-    if(l>L)for(int i=l-1;i>=L;i--)add(arr[i]);
-    if(r<R)for(int i=r+1;i<=R;i++) add(arr[i]);
-    if(r>R)for(int i=r;i>R;i--) del(arr[i]);
-//    cout<<L<<" "<<R<<" "<<l<<" "<<r<<endl;
-    l=L, r=R;
+//     if(l<L)for(int i=l;i<L;i++)del(arr[i]);
+//     if(l>L)for(int i=l-1;i>=L;i--)add(arr[i]);
+//     if(r<R)for(int i=r+1;i<=R;i++) add(arr[i]);
+//     if(r>R)for(int i=r;i>R;i--) del(arr[i]);
+// //    cout<<L<<" "<<R<<" "<<l<<" "<<r<<endl;
+//     l=L, r=R;
+    
+    while(l<L){
+        
+        /// TODO remove above this
+        l++;
+    }
+    while(l>L){
+        l--;
+        /// TODO add below this
+        
+    }
+    while(r<R){
+        r++;
+        /// TODO add below this
+        
+    }
+    while(r>R){
+        
+        /// TODO remove above this
+        r--;
+    }
 }
 
 int main() {
