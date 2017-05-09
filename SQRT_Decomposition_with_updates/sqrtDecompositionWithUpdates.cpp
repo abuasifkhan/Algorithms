@@ -111,20 +111,27 @@ ll getOriginalValue(int idx){
     return originalValue[arr[idx]];
 }
 
-ll adjustUpdates(int cur, int st, int en, int updateAbove){
 
+ll del(int idx){
+    updateFrequency(idx,-1);
+    return isRemoved(idx)*getOriginalValue(idx);
+}
+ll add(int idx){
+    updateFrequency(idx,+1);
+    return isFirstTimeInserted(idx)*getOriginalValue(idx);
+}
+
+ll adjustUpdates(int cur, int st, int en, int updateAbove){
     ll ans = 0;
     while(cur<updateAbove){
         int idx = update[cur].idx;
 
         if(idx>=st && idx<=en){
-            updateFrequency(idx,-1);
-            ans -= isRemoved(idx)*getOriginalValue(idx);
+            ans -= del(idx);
         }
         arr[idx] = update[cur].val;
         if(idx>=st and idx<=en){
-            updateFrequency(idx,+1);
-            ans += isFirstTimeInserted(idx)*getOriginalValue(idx);
+            ans += add(idx);
         }
         /// TODO above this
         cur++;
@@ -134,43 +141,38 @@ ll adjustUpdates(int cur, int st, int en, int updateAbove){
         /// TODO below this
         int idx = update[cur].idx;
         if(idx>=st and idx<=en){
-            updateFrequency(idx,-1);
-            ans -= isRemoved(idx)*getOriginalValue(idx);
+            ans -= del(idx);
         }
 
         arr[idx] = update[cur].val;
         if(idx>=st and idx<=en){
-            updateFrequency(idx,+1);
-            ans += isFirstTimeInserted(idx)*getOriginalValue(idx);
+            ans += add(idx);
         }
     }
     return ans;
 }
 
+
 ll adjustQueries(int &st, int &en, int l, int r){
     ll ans = 0;
     while(st<l){
-        updateFrequency(st,-1);
-        ans -= isRemoved(st)*getOriginalValue(st);
-        /// TODO above this
+        ans-=del(st);
+        /// TODO delete above this
         st++;
     }
     while(st>l){
         st--;
-        /// TODO below this
-        updateFrequency(st,+1);
-        ans -= isFirstTimeInserted(st)*getOriginalValue(st);
+        /// TODO add below this
+        ans+=add(st);
     }
     while(en<r){
         en++;
-        /// TODO below this
-        updateFrequency(en,1);
-        ans += isFirstTimeInserted(en)*getOriginalValue(en);
+        /// TODO add below this
+        ans+=add(en);
     }
     while(en>r){
-        updateFrequency(en,-1);
-        ans -= isRemoved(en)*getOriginalValue(en);
-        /// TODO above this
+        ans-=del(en);
+        /// TODO delete above this
         en--;
     }
     return ans;
@@ -252,3 +254,13 @@ int main() {
     }
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
