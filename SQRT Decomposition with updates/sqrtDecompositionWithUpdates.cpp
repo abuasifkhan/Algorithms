@@ -121,7 +121,7 @@ ll add(int idx){
     return isFirstTimeInserted(idx)*getOriginalValue(idx);
 }
 
-ll adjustUpdates(int cur, int st, int en, int updateAbove){
+ll adjustUpdates(int &cur, int st, int en, int updateAbove){
     ll ans = 0;
     while(cur<updateAbove){
         int idx = update[cur].idx;
