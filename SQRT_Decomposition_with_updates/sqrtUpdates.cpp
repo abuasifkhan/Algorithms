@@ -112,7 +112,6 @@ ll getOriginalValue(int idx){
 }
 
 ll adjustUpdates(int cur, int st, int en, int updateAbove){
-    /// UNDOs and REDOs the updates.
 
     ll ans = 0;
     while(cur<updateAbove){
