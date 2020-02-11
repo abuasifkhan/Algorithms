@@ -7,8 +7,9 @@
  - THRESHOLD is a very important constant.  It is the minimum number
  of elements required in a subclass before recursion is used.     
  
- More details: https://www.drdobbs.com/database/the-flashsort1-algorithm/184410496
- 
+ More details: 
+ https://www.drdobbs.com/database/the-flashsort1-algorithm/184410496
+ http://guihaire.com/code/?p=552
  */
 
 #include <stdio.h> ;
