@@ -5,7 +5,11 @@
  - The vector l is declare dynamically using the calloc function.
  - The variable ctr counts the number of times that flashsort is called.
  - THRESHOLD is a very important constant.  It is the minimum number
- of elements required in a subclass before recursion is used.     */
+ of elements required in a subclass before recursion is used.     
+ 
+ More details: https://www.drdobbs.com/database/the-flashsort1-algorithm/184410496
+ 
+ */
 
 #include <stdio.h> ;
 #include <math.h> ;
